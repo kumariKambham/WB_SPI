@@ -1,0 +1,77 @@
+`include "wb_spi_env.sv"
+class test1 extends uvm_test;
+  `uvm_component_utils(test1)
+  wb_spi_env env_h;
+  cntr_reg_sequence reg_seq_h;
+  wb_sequence seq_h;
+  wb_sequence1 seq_h1;
+   wb_sequence2 seq_h2;
+  wb_sequence3 seq_h3;
+  spi_sequence seq2_h;
+  
+  function new(string name="test1", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+  
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+    env_h=wb_spi_env::type_id::create("env_h",this);
+    reg_seq_h=cntr_reg_sequence::type_id::create("reg_seq_h",this);
+    seq_h=wb_sequence::type_id::create("seq_h",this);
+    seq_h2=wb_sequence2::type_id::create("seq_h2",this);
+    seq_h1=wb_sequence1::type_id::create("seq_h1",this);
+    seq_h3=wb_sequence3::type_id::create("seq_h3",this);
+    seq2_h=spi_sequence::type_id::create("seq2_h",this);
+  endfunction
+  
+  task run_phase(uvm_phase phase);
+  //  forever begin
+  //  repeat(10)begin
+    phase.raise_objection(this);
+    //reg_seq_h.start(env_h.wb_agent_h.seqr_h);
+    
+     seq_h3.start(env_h.wb_agent_h.seqr_h);
+    #1;
+    //wishbone write-spi read
+    // reg_seq_h.start(env_h.wb_agent_h.seqr_h);
+    //#10;
+  //  seq_h2.start(env_h.wb_agent_h.seqr_h);
+    // seq2_h.start(env_h.spi_agent_h.seq_h);
+    //#2000;
+    //fork 
+   seq_h1.start(env_h.wb_agent_h.seqr_h);
+     reg_seq_h.start(env_h.wb_agent_h.seqr_h);
+    seq2_h.start(env_h.spi_agent_h.seq_h);
+    
+    //join
+    #2000
+   //  reg_seq_h.start(env_h.wb_agent_h.seqr_h);
+    seq_h.start(env_h.wb_agent_h.seqr_h);
+    //seq2_h.start(env_h.spi_agent_h.seq_h);
+    //#10;
+    // reg_seq_h.start(env_h.wb_agent_h.seqr_h);
+   // #1;
+   // seq_h1.start(env_h.wb_agent_h.seqr_h);
+     // #2000;
+   // end
+   // #4000;
+    //spi write -- wishbone read
+  // reg_seq_h.start(env_h.wb_agent_h.seqr_h);
+    
+    //seq_h.start(env_h.wb_agent_h.seqr_h);
+    //#1;
+   // reg_seq_h.start(env_h.wb_agent_h.seqr_h);
+    //seq2_h.start(env_h.spi_agent_h.seq_h);
+    //#2000;
+    
+    // wishbone write -spi read
+    //reg_seq_h.start(env_h.wb_agent_h.seqr_h);
+    //#1;
+    //seq_h2.start(env_h.wb_agent_h.seqr_h);
+    //seq_h.start(env_h.wb_agent_h.seqr_h);
+    phase.phase_done.set_drain_time(this, 5000);
+    phase.drop_objection(this);
+   // end
+  endtask
+  
+endclass
